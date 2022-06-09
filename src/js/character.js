@@ -1,0 +1,44 @@
+export default class Character {
+  constructor(name, type) {
+    const trueType = ['Bowerman', 'Swordsman', 'Magician', 'Daemon', 'Undead', 'Zombie'];
+    const attackDefence = {
+      Bowerman: '25/25',
+      Swordsman: '40/10',
+      Magician: '10/40',
+      Undead: '25/25',
+      Zombie: '40/10',
+      Daemon: '10/40',
+    };
+    if (typeof name !== 'string' || name.length < 2 || name.length > 10 || !trueType.includes(type)) {
+      throw new Error('Некорректный значение');
+    } else {
+      this.name = name;
+      this.type = type;
+      this.health = 100;
+      this.level = 1;
+      for (const key in attackDefence) {
+        if (key === type) {
+          const attackDefenceSplit = attackDefence[key].split('/');
+          this.attack = Number(attackDefenceSplit[0]);
+          this.defence = Number(attackDefenceSplit[1]);
+        }
+      }
+    }
+  }
+
+  levelUp() {
+    if (this.health > 0) {
+      this.level += 1;
+      this.health = 100;
+      this.attack += (this.attack * 0.2);
+      this.defence += (this.defence * 0.2);
+    } else {
+      throw new Error('Нельзя повысить левел умершего');
+    }
+  }
+
+  damage(points) {
+    this.health -= points * (1 - this.defence / 100);
+    if (this.health < 0) this.health = 0;
+  }
+}
